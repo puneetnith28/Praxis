@@ -1,0 +1,70 @@
+# Dependencies
+node_modules/
+.pnp/
+.pnp.js
+
+# Build outputs
+dist/
+dist-desktop/
+dist-electron/
+release/
+build/*.deb
+build/*.AppImage
+build/*.dmg
+build/*.exe
+build/*.zip
+
+# TypeScript
+*.tsbuildinfo
+
+# Vite & Bundler cache
+.vite/
+.cache/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Testing & Coverage
+coverage/
+.nyc_output/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE & Editors
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.sublime-workspace
+*.sublime-project
+
+# Runtime / persistent local storage
+.conduit/
+conduit.db*
+*.sqlite
+*.sqlite3
+
+# Temporary / context dumps
+generate_context.sh
+run_40_commits.sh
+.git_backup/
