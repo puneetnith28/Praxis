@@ -1,0 +1,272 @@
+/**
+ * DaemonClient — used by the web server to talk to conduit-daemon.
+ *
+ * Handles connect + auto-reconnect, RPC request/response correlation, and
+ * fan-out of streaming events (terminal output, agent status) to listeners.
+ */
+
+import { WebSocket } from 'ws';
+import { randomUUID } from 'crypto';
+import {
+  DAEMON_URL,
+  type DaemonMessage,
+  type DaemonRpcResults,
+  type DaemonRpcParams,
+  type DaemonCommand,
+  type BrainEvent,
+  type AgentDispatch,
+  type CodexItem,
+  type GateEvent,
+} from './protocol.js';
+
+type OutputListener = (agentId: string, data: string) => void;
+type StatusListener = (agentId: string, status: string) => void;
+type BrainListener = (payload: BrainEvent) => void;
+type DispatchListener = (payload: AgentDispatch) => void;
+type OrgChangedListener = () => void;
+type CodexItemListener = (agentId: string, item: CodexItem) => void;
+type SupervisorUpdateListener = (payload: any) => void;
+type GroupChatMsgListener = (payload: any) => void;
+type GateListener = (ev: { kind: 'triggered'; gate: GateEvent } | { kind: 'resolved'; agentId: string }) => void;
+type ConnectListener = () => void;
+
+interface Pending {
+  resolve: (value: unknown) => void;
+  reject: (reason: Error) => void;
+  timer: ReturnType<typeof setTimeout>;
+}
+
+export class DaemonClient {
+  private ws: WebSocket | null = null;
+  private connected = false;
+  private readonly pending = new Map<string, Pending>();
+  private readonly outputListeners = new Set<OutputListener>();
+  private readonly statusListeners = new Set<StatusListener>();
+  private readonly brainListeners = new Set<BrainListener>();
+  private readonly dispatchListeners = new Set<DispatchListener>();
+  private readonly orgChangedListeners = new Set<OrgChangedListener>();
+  private readonly codexItemListeners = new Set<CodexItemListener>();
+  private readonly supervisorUpdateListeners = new Set<SupervisorUpdateListener>();
+  private readonly groupChatMsgListeners = new Set<GroupChatMsgListener>();
+  private readonly gateListeners = new Set<GateListener>();
+  private readonly connectListeners = new Set<ConnectListener>();
+  private reconnectTimer: ReturnType<typeof setTimeout> | null = null;
+  private readonly outbox: string[] = []; // queued while disconnected
+  private readonly url: string;
+  private warnedDown = false;
+
+  constructor(url: string = DAEMON_URL) {
+    this.url = url;
+  }
+
+  connect(): void {
+    if (this.ws) return;
+    const ws = new WebSocket(this.url);
+    this.ws = ws;
+
+    ws.on('open', () => {
+      this.connected = true;
+      this.warnedDown = false;
+      console.log('[daemon-client] connected to daemon');
+      // Flush anything queued while we were down
+      for (const msg of this.outbox.splice(0)) {
+        ws.send(msg);
+      }
+      for (const l of this.connectListeners) l();
+    });
+
+    ws.on('message', (raw) => {
+      let msg: DaemonMessage;
+      try {
+        msg = JSON.parse(raw.toString());
+      } catch {
+        return;
+      }
+      this.dispatch(msg);
+    });
+
+    ws.on('close', () => {
+      this.connected = false;
+      this.ws = null;
+      this.scheduleReconnect();
+    });
+
+    ws.on('error', (err) => {
+      // Log once per outage — the reconnect loop would otherwise spam every second.
+      if (!this.warnedDown) {
+        this.warnedDown = true;
+        console.warn(`[daemon-client] daemon unreachable (${err.message}) — retrying in the background. Start it with: npm run daemon`);
+      }
+      // 'close' will follow and trigger reconnect
+    });
+  }
+
+  private scheduleReconnect(): void {
+    if (this.reconnectTimer) return;
+    this.reconnectTimer = setTimeout(() => {
+      this.reconnectTimer = null;
+      this.connect();
+    }, 1000);
+  }
+
+  private dispatch(msg: DaemonMessage): void {
+    switch (msg.kind) {
+      case 'hello':
+        console.log(`[daemon-client] daemon ready (pid ${msg.pid}, up since ${msg.startedAt})`);
+        break;
+      case 'reply': {
+        const p = this.pending.get(msg.id);
+        if (!p) return;
+        this.pending.delete(msg.id);
+        clearTimeout(p.timer);
+        if (msg.ok) p.resolve(msg.result);
+        else p.reject(new Error(msg.error));
+        break;
+      }
+      case 'event':
+        if (msg.event === 'terminal:output') {
+          for (const l of this.outputListeners) l(msg.agentId, msg.data);
+        } else if (msg.event === 'agent:status') {
+          for (const l of this.statusListeners) l(msg.agentId, msg.status);
+        } else if (msg.event === 'brain:event') {
+          for (const l of this.brainListeners) l(msg.payload);
+        } else if (msg.event === 'agent:dispatch') {
+          for (const l of this.dispatchListeners) l(msg.payload);
+        } else if (msg.event === 'org:changed') {
+          for (const l of this.orgChangedListeners) l();
+        } else if (msg.event === 'codex:item') {
+          for (const l of this.codexItemListeners) l(msg.agentId, msg.item);
+        } else if (msg.event === 'supervisor:update') {
+          for (const l of this.supervisorUpdateListeners) l(msg.payload);
+        } else if (msg.event === 'groupchat:message') {
+          for (const l of this.groupChatMsgListeners) l(msg.payload);
+        } else if (msg.event === 'gate:triggered') {
+          const gate: GateEvent = {
+            agentId: msg.agentId, projectId: msg.projectId, prompt: msg.prompt,
+            source: msg.source, options: msg.options,
+            ...(msg.acpOptions ? { acpOptions: msg.acpOptions } : {}),
+          };
+          for (const l of this.gateListeners) l({ kind: 'triggered', gate });
+        } else if (msg.event === 'gate:resolved') {
+          for (const l of this.gateListeners) l({ kind: 'resolved', agentId: msg.agentId });
+        }
+        break;
+    }
+  }
+
+  private raw(json: string): void {
+    if (this.connected && this.ws) {
+      this.ws.send(json);
+    } else {
+      // Don't let the outbox grow without bound while the daemon is down.
+      if (this.outbox.length >= 500) this.outbox.shift();
+      this.outbox.push(json);
+      this.connect();
+    }
+  }
+
+  /** RPC call — resolves with the typed result or rejects on daemon error. */
+  request<K extends keyof DaemonRpcResults>(
+    op: K,
+    params?: DaemonRpcParams[K],
+  ): Promise<DaemonRpcResults[K]> {
+    const id = randomUUID();
+    return new Promise<DaemonRpcResults[K]>((resolve, reject) => {
+      const timer = setTimeout(() => {
+        this.pending.delete(id);
+        reject(new Error(`daemon RPC timeout: ${op}`));
+      }, 15_000);
+      this.pending.set(id, {
+        resolve: resolve as (v: unknown) => void,
+        reject,
+        timer,
+      });
+      this.raw(JSON.stringify({ id, op, ...(params || {}) }));
+    });
+  }
+
+  /** Fire-and-forget command (no reply expected). */
+  command(cmd: DaemonCommand): void {
+    this.raw(JSON.stringify(cmd));
+  }
+
+  attachTerminal(agentId: string): void {
+    this.command({ op: 'terminal:attach', agentId });
+  }
+  detachTerminal(agentId: string): void {
+    this.command({ op: 'terminal:detach', agentId });
+  }
+  writeTerminal(agentId: string, data: string): void {
+    this.command({ op: 'terminal:input', agentId, data });
+  }
+  resizeTerminal(agentId: string, cols: number, rows: number): void {
+    this.command({ op: 'terminal:resize', agentId, cols, rows });
+  }
+
+  onOutput(listener: OutputListener): () => void {
+    this.outputListeners.add(listener);
+    return () => this.outputListeners.delete(listener);
+  }
+  onStatus(listener: StatusListener): () => void {
+    this.statusListeners.add(listener);
+    return () => this.statusListeners.delete(listener);
+  }
+  onBrain(listener: BrainListener): () => void {
+    this.brainListeners.add(listener);
+    return () => this.brainListeners.delete(listener);
+  }
+  onDispatch(listener: DispatchListener): () => void {
+    this.dispatchListeners.add(listener);
+    return () => this.dispatchListeners.delete(listener);
+  }
+  onOrgChanged(listener: OrgChangedListener): () => void {
+    this.orgChangedListeners.add(listener);
+    return () => this.orgChangedListeners.delete(listener);
+  }
+  onCodexItem(listener: CodexItemListener): () => void {
+    this.codexItemListeners.add(listener);
+    return () => this.codexItemListeners.delete(listener);
+  }
+  onSupervisorUpdate(listener: SupervisorUpdateListener): () => void {
+    this.supervisorUpdateListeners.add(listener);
+    return () => this.supervisorUpdateListeners.delete(listener);
+  }
+  onGroupChatMessage(listener: GroupChatMsgListener): () => void {
+    this.groupChatMsgListeners.add(listener);
+    return () => this.groupChatMsgListeners.delete(listener);
+  }
+  onGate(listener: GateListener): () => void {
+    this.gateListeners.add(listener);
+    return () => this.gateListeners.delete(listener);
+  }
+  /** Fires on every (re)connect — used to re-attach terminal subscriptions. */
+  onConnect(listener: ConnectListener): () => void {
+    this.connectListeners.add(listener);
+    return () => this.connectListeners.delete(listener);
+  }
+
+  /** Send a user message to the orchestrator brain (fire-and-forget). */
+  sendBrain(message: string): void {
+    this.command({ op: 'brain:send', message });
+  }
+  /** Start a fresh brain conversation. */
+  newBrainConversation(): void {
+    this.command({ op: 'brain:new' });
+  }
+  /** Cancel the in-flight Keeper turn (kill the Codex child process). */
+  abortBrain(): void {
+    this.command({ op: 'brain:abort' });
+  }
+  /** Switch the active brain conversation. */
+  switchBrainConversation(conversationId: string): void {
+    this.command({ op: 'brain:switch', conversationId });
+  }
+  /** Delete a brain conversation. */
+  deleteBrainConversation(conversationId: string): void {
+    this.command({ op: 'brain:delete', conversationId });
+  }
+
+  isConnected(): boolean {
+    return this.connected;
+  }
+}
