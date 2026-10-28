@@ -1,0 +1,41 @@
+services:
+  conduit:
+    build: .
+    container_name: conduit
+    ports:
+      - "3200:3200"
+    environment:
+      # REQUIRED when the port is reachable from other machines.
+      - CONDUIT_AUTH=${CONDUIT_AUTH:?set CONDUIT_AUTH=user:password in your shell or a .env file}
+      - AWS_REGION=${AWS_REGION:-us-east-1}
+      # An inference profile (us. prefix), not a bare model id. Bedrock retired
+      # every bare anthropic.* id; the old default here answered "this model version
+      # has reached the end of its life" on every call. Must match the IAM policy
+      # in docs/bedrock-iam-policy.json.
+      - BEDROCK_MODEL_ID=${BEDROCK_MODEL_ID:-us.anthropic.claude-sonnet-4-5-20250929-v1:0}
+      # Leave empty on EC2 with an instance role; set locally if you have keys.
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:-}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY:-}
+      - CONDUIT_SUPERVISOR=${CONDUIT_SUPERVISOR:-on}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      # Supervisor fallback when Bedrock is unavailable.
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      # Required by the `gpt` and `nemotron` agent types (both run on aider).
+      - GROQ_API_KEY=${GROQ_API_KEY:-}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-}
+    volumes:
+      # Bedrock's own data (projects, wiki, shared content, chat logs)
+      - conduit-data:/root/.conduit
+      # Agent CLI logins + sessions. Comment out and run
+      # `docker compose exec conduit claude login` instead if you prefer.
+      - ${HOME}/.claude:/root/.claude
+      - ${HOME}/.codex:/root/.codex
+      - ${HOME}/.gemini:/root/.gemini
+      # Where your projects live inside the container (project cwd paths
+      # must point here, e.g. /workspace/my-app)
+      - ${CONDUIT_WORKSPACE:-./workspace}:/workspace
+    restart: unless-stopped
+
+volumes:
+  conduit-data:
