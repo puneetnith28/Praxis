@@ -1,0 +1,56 @@
+{
+  "appId": "com.bedrock.desktop",
+  "productName": "Bedrock",
+  "npmRebuild": false,
+  "nodeGypRebuild": false,
+  "asar": false,
+  "directories": {
+    "output": "dist-desktop",
+    "buildResources": "build"
+  },
+  "files": [
+    "dist/**/*",
+    "!dist/**/*.map",
+    "package.json",
+    "!node_modules/@node-llama-cpp/**",
+    "!node_modules/node-llama-cpp/**",
+    "!node_modules/@tobilu/**",
+    "!node_modules/better-sqlite3/**",
+    "!node_modules/tree-sitter*/**",
+    "!node_modules/sharp/**",
+    "!node_modules/@img/**"
+  ],
+  "publish": {
+    "provider": "github",
+    "owner": "puneetnith28",
+    "repo": "Bedrock"
+  },
+  "mac": {
+    "category": "public.app-category.developer-tools",
+    "target": [
+      "zip",
+      "dmg"
+    ],
+    "artifactName": "Bedrock-${version}-mac-${arch}.${ext}"
+  },
+  "linux": {
+    "category": "Development",
+    "target": [
+      "AppImage",
+      "deb"
+    ],
+    "artifactName": "Bedrock-${version}-linux-${arch}.${ext}"
+  },
+  "win": {
+    "target": [
+      "nsis",
+      "zip"
+    ],
+    "artifactName": "Bedrock-${version}-win-${arch}.${ext}"
+  },
+  "nsis": {
+    "oneClick": false,
+    "allowToChangeInstallationDirectory": true,
+    "artifactName": "Bedrock-Setup-${version}.${ext}"
+  }
+}
