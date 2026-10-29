@@ -66,6 +66,5 @@ conduit.db*
 
 # Temporary / context dumps
 generate_context.sh
-run_40_commits.sh
 .git_backup/
-plan.md
+
