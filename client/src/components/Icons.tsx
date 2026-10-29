@@ -1,0 +1,326 @@
+/**
+ * Icon set for the Conduit Conduit Dashboard redesign.
+ * Stroke-based, inherits currentColor. Use <Ic.name size={...} />.
+ */
+
+interface IconProps {
+  size?: number;
+  strokeWidth?: number;
+  className?: string;
+  style?: React.CSSProperties;
+}
+
+const Ic = {
+  search: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={p.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" style={p.style} className={p.className}>
+      <path d="M7 12.5a5.5 5.5 0 100-11 5.5 5.5 0 000 11zM11.2 11.2l3 3" />
+    </svg>
+  ),
+  chevR: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={p.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" style={p.style}>
+      <path d="M6 3l4 5-4 5" />
+    </svg>
+  ),
+  chevD: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={p.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" style={p.style}>
+      <path d="M3 6l5 4 5-4" />
+    </svg>
+  ),
+  plus: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={p.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" style={p.style}>
+      <path d="M8 3v10M3 8h10" />
+    </svg>
+  ),
+  x: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={p.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" style={p.style}>
+      <path d="M4 4l8 8M12 4l-8 8" />
+    </svg>
+  ),
+  play: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 16 16" fill="currentColor" style={p.style}>
+      <path d="M5 3.5l7 4.5-7 4.5V3.5z" />
+    </svg>
+  ),
+  stop: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 16 16" fill="currentColor" style={p.style}>
+      <path d="M4 4h8v8H4z" />
+    </svg>
+  ),
+  restart: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={p.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" style={p.style}>
+      <path d="M13 8a5 5 0 11-1.5-3.5M13 3v3h-3" />
+    </svg>
+  ),
+  grid: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={p.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" style={p.style}>
+      <path d="M2.5 2.5h5v5h-5zM8.5 2.5h5v5h-5zM2.5 8.5h5v5h-5zM8.5 8.5h5v5h-5z" />
+    </svg>
+  ),
+  single: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={p.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" style={p.style}>
+      <path d="M2.5 2.5h11v11h-11z" />
+    </svg>
+  ),
+  threeup: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={p.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" style={p.style}>
+      <path d="M2 3h3v10H2zM6.5 3h3v10h-3zM11 3h3v10h-3z" />
+    </svg>
+  ),
+  twoup: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={p.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" style={p.style}>
+      <path d="M2.5 2.5h5v11h-5zM8.5 2.5h5v11h-5z" />
+    </svg>
+  ),
+  focus: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={p.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" style={p.style}>
+      <path d="M2.5 2.5h8v11h-8zM11.5 3h2v3h-2zM11.5 6.5h2v3h-2zM11.5 10h2v3h-2z" />
+    </svg>
+  ),
+  canvas: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={p.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" style={p.style}>
+      <path d="M2 2.5h5v4H2zM8.5 3.5h5v3h-5zM3 8.5h4v4.5H3zM9 8h5v5h-5z" />
+    </svg>
+  ),
+  panelLeft: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={p.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" style={p.style}>
+      <path d="M2.5 2.5h11v11h-11zM6 2.5v11" />
+    </svg>
+  ),
+  panelLeftOpen: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={p.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" style={p.style}>
+      <path d="M2.5 2.5h11v11h-11zM6 2.5v11M8.5 6l2 2-2 2" />
+    </svg>
+  ),
+  pin: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={p.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" style={p.style}>
+      <path d="M8 1.5v5M5 3.5h6M6.5 6.5L4 12h8L9.5 6.5M8 12v2.5" />
+    </svg>
+  ),
+  splitH: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth={p.strokeWidth || 1.2} strokeLinecap="round" strokeLinejoin="round" style={p.style}>
+      <path d="M2.5 2.5h9v9h-9zM7 2.5v9" />
+    </svg>
+  ),
+  splitV: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth={p.strokeWidth || 1.2} strokeLinecap="round" strokeLinejoin="round" style={p.style}>
+      <path d="M2.5 2.5h9v9h-9zM2.5 7h9" />
+    </svg>
+  ),
+  sun: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={p.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" style={p.style}>
+      <path d="M8 11a3 3 0 100-6 3 3 0 000 6zM8 1.5v1.5M8 13v1.5M1.5 8h1.5M13 8h1.5M3.5 3.5l1 1M11.5 11.5l1 1M3.5 12.5l1-1M11.5 4.5l1-1" />
+    </svg>
+  ),
+  moon: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={p.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" style={p.style}>
+      <path d="M13 9.5A5.5 5.5 0 116.5 3 4 4 0 0013 9.5z" />
+    </svg>
+  ),
+  bolt: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 16 16" fill="currentColor" style={p.style}>
+      <path d="M9 1.5L3.5 9h4l-1 5.5L12 7H8l1-5.5z" />
+    </svg>
+  ),
+  terminal: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={p.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" style={p.style}>
+      <path d="M2.5 3.5h11v9h-11zM4.5 6l2 2-2 2M8 10h3" />
+    </svg>
+  ),
+  message: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={p.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" style={p.style}>
+      <path d="M2.5 3.5h11v8h-4l-2.5 2.5V11.5h-4.5z" />
+    </svg>
+  ),
+  activity: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={p.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" style={p.style}>
+      <path d="M1.5 8h3l2-5 3 10 2-5h3" />
+    </svg>
+  ),
+  book: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={p.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" style={p.style}>
+      <path d="M3 3.5a1.5 1.5 0 011.5-1.5H13v11H4.5A1.5 1.5 0 003 14.5v-11zM3 14.5a1.5 1.5 0 011.5-1.5H13" />
+    </svg>
+  ),
+  file: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={p.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" style={p.style}>
+      <path d="M4 1.5h5L13 5.5v9H4v-13zM9 1.5V5.5h4" />
+    </svg>
+  ),
+  folder: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={p.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" style={p.style}>
+      <path d="M2 3.5h4l1.5 1.5H14v8H2v-9.5z" />
+    </svg>
+  ),
+  hash: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={p.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" style={p.style}>
+      <path d="M6 2v12M10 2v12M2 6h12M2 10h12" />
+    </svg>
+  ),
+  user: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={p.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" style={p.style}>
+      <path d="M8 8.5a3 3 0 100-6 3 3 0 000 6zM2 14c0-2.5 2.5-4 6-4s6 1.5 6 4" />
+    </svg>
+  ),
+  arrowR: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={p.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" style={p.style}>
+      <path d="M3 8h10M9 4l4 4-4 4" />
+    </svg>
+  ),
+  dots: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={p.strokeWidth || 2} strokeLinecap="round" strokeLinejoin="round" style={p.style}>
+      <path d="M3.5 8h.01M8 8h.01M12.5 8h.01" />
+    </svg>
+  ),
+  dollar: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={p.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" style={p.style}>
+      <path d="M8 2v12M11 5H7a2 2 0 000 4h2a2 2 0 010 4H5" />
+    </svg>
+  ),
+  send: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={p.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" style={p.style}>
+      <path d="M14 2L7 9M14 2L9.5 14L7 9L2 6.5L14 2z" />
+    </svg>
+  ),
+  sparkles: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={p.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" style={p.style}>
+      <path d="M8 1v5l3 2-3 2v5l-3-5-5 3 5-3-5-3 5 3 3-5z" />
+    </svg>
+  ),
+  settings: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={p.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" style={p.style} className={p.className}>
+      <circle cx="8" cy="8" r="2.2" />
+      <path d="M13 8c0-.3-.03-.57-.07-.84l1.42-1.1-1.5-2.6-1.7.68a4.7 4.7 0 00-1.46-.84L9.5 1.5h-3l-.19 1.8a4.7 4.7 0 00-1.46.84l-1.7-.68-1.5 2.6 1.42 1.1A4.7 4.7 0 003 8c0 .29.02.57.07.84L1.65 9.94l1.5 2.6 1.7-.68c.43.34.92.62 1.46.84l.19 1.8h3l.19-1.8c.54-.22 1.03-.5 1.46-.84l1.7.68 1.5-2.6-1.42-1.1c.05-.27.07-.55.07-.84z" />
+    </svg>
+  ),
+  volume: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={p.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" style={p.style} className={p.className}>
+      <path d="M8.5 3L4.5 6H2v4h2.5l4 3V3Z" />
+      <path d="M11 6.2a3 3 0 010 3.6M13 4.6a6 6 0 010 6.8" />
+    </svg>
+  ),
+  bell: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={p.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" style={p.style} className={p.className}>
+      <path d="M4 5.3a4 4 0 018 0c0 4.7 2 6 2 6H2s2-1.3 2-6" />
+      <path d="M6.9 14a1.3 1.3 0 002.3 0" />
+    </svg>
+  ),
+  mic: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={p.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" style={p.style} className={p.className}>
+      <rect x="5.8" y="1.6" width="4.4" height="8" rx="2.2" />
+      <path d="M3.6 7.6a4.4 4.4 0 008.8 0" />
+      <path d="M8 12v2.4M5.6 14.4h4.8" />
+    </svg>
+  ),
+  // Bedrock brand mark — official Bedrock logo
+  logo: (p: IconProps = {}) => {
+    const s = p.size || 14;
+    return (
+      <img
+        src="/logo-128.png?v=2"
+        alt="Bedrock"
+        width={s}
+        height={s}
+        className={p.className}
+        style={{
+          width: s,
+          height: s,
+          objectFit: 'contain',
+          borderRadius: Math.max(2, Math.round(s * 0.22)),
+          display: 'inline-block',
+          verticalAlign: 'middle',
+          flexShrink: 0,
+          ...p.style,
+        }}
+      />
+    );
+  },
+  menu: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" style={p.style}>
+      <path d="M3 5h12M3 9h12M3 13h12" />
+    </svg>
+  ),
+  gear: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={p.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" style={p.style}>
+      <path d="M12 15.5a3.5 3.5 0 100-7 3.5 3.5 0 000 7zM19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z" />
+    </svg>
+  ),
+  chevDown: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={p.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" style={p.style}>
+      <path d="M4 6l4 4 4-4" />
+    </svg>
+  ),
+  help: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={p.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" style={p.style}>
+      <circle cx="8" cy="8" r="6" />
+      <path d="M6.5 6.2a1.8 1.8 0 013.2.9c0 1.1-1.7 1.4-1.7 2.4M8 12.2h.01" />
+    </svg>
+  ),
+  shield: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={p.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" style={p.style} className={p.className}>
+      <path d="M8 1.5l6 2.5v4c0 4-3 6.5-6 7.5-3-1-6-3.5-6-7.5v-4z" />
+    </svg>
+  ),
+  key: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={p.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" style={p.style} className={p.className}>
+      <circle cx="5" cy="8" r="3" />
+      <path d="M8 8h6M11.5 8v2M14 8v1.5" />
+    </svg>
+  ),
+  check: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={p.strokeWidth || 1.8} strokeLinecap="round" strokeLinejoin="round" style={p.style} className={p.className}>
+      <path d="M3.5 8.5l3 3 6-6" />
+    </svg>
+  ),
+  eye: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={p.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" style={p.style} className={p.className}>
+      <path d="M1.5 8s2.5-4.5 6.5-4.5 6.5 4.5 6.5 4.5-2.5 4.5-6.5 4.5-6.5-4.5-6.5-4.5z" />
+      <circle cx="8" cy="8" r="2" />
+    </svg>
+  ),
+  eyeOff: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={p.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" style={p.style} className={p.className}>
+      <path d="M2 2l12 12M6.7 6.7A2 2 0 009.3 9.3M4.2 4.3C2.8 5.4 1.5 8 1.5 8s2.5 4.5 6.5 4.5c1.4 0 2.6-.4 3.7-1.1M9.9 5.3A6.4 6.4 0 0114.5 8s-2.5 4.5-6.5 4.5" />
+    </svg>
+  ),
+  copy: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={p.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" style={p.style} className={p.className}>
+      <rect x="5" y="5" width="8" height="8" rx="1.5" />
+      <path d="M3 11V3.5A1.5 1.5 0 014.5 2H11" />
+    </svg>
+  ),
+  edit: (p: IconProps = {}) => (
+    <svg width={p.size || 14} height={p.size || 14} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={p.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" style={p.style} className={p.className}>
+      <path d="M11.5 2.5a1.4 1.4 0 012 2L4.5 13.5 2 14l.5-2.5 9-9z" />
+    </svg>
+  ),
+  download: (p: IconProps = {}) => (
+    <svg width={p.size || 16} height={p.size || 16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={p.strokeWidth || 2} strokeLinecap="round" strokeLinejoin="round" style={p.style} className={p.className}>
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+      <polyline points="7 10 12 15 17 10" />
+      <line x1="12" y1="15" x2="12" y2="3" />
+    </svg>
+  ),
+  windows: (p: IconProps = {}) => (
+    <svg width={p.size || 20} height={p.size || 20} viewBox="0 0 24 24" fill="currentColor" style={p.style} className={p.className}>
+      <path d="M0 0h11.377v11.372H0zm12.623 0H24v11.372H12.623zM0 12.628h11.377V24H0zm12.623 0H24V24H12.623z" />
+    </svg>
+  ),
+  apple: (p: IconProps = {}) => (
+    <svg width={p.size || 20} height={p.size || 20} viewBox="0 0 24 24" fill="currentColor" style={p.style} className={p.className}>
+      <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.62-.75 1.04-1.8 1.01-2.87-.96.04-2.12.64-2.79 1.42-.59.68-1.11 1.76-.97 2.81 1.07.08 2.17-.56 2.75-1.36z" />
+    </svg>
+  ),
+  linux: (p: IconProps = {}) => (
+    <svg width={p.size || 20} height={p.size || 20} viewBox="0 0 24 24" fill="currentColor" style={p.style} className={p.className}>
+      <path d="M12.003 0c-.866 0-1.637.33-2.223.883-.586.553-.97 1.345-1.082 2.293-.112.948.046 1.99.447 2.973.402.983 1.05 1.884 1.838 2.54.02.016.037.034.057.05-.727.42-1.517.973-2.164 1.696-.648.723-1.107 1.62-1.156 2.7-.05 1.077.298 2.22 1.078 3.197.78 1.002 1.97 1.748 3.205 2.107-.577.498-1.127.974-1.465 1.474-.338.5-.472 1.033-.314 1.6.158.567.625 1.07 1.303 1.42.678.35 1.54.526 2.476.526.936 0 1.798-.176 2.476-.526.678-.35 1.145-.853 1.303-1.42.158-.567.024-1.1-.314-1.6-.338-.5-.888-.976-1.465-1.474 1.235-.36 2.425-1.105 3.205-2.107.78-.977 1.128-2.12 1.078-3.197-.05-1.08-.508-1.977-1.156-2.7-.647-.723-1.437-1.276-2.164-1.696.02-.016.037-.034.057-.05.788-.656 1.436-1.557 1.838-2.54.401-.983.56-2.025.447-2.973-.112-.948-.496-1.74-1.082-2.293C13.64.33 12.87 0 12.003 0z" />
+    </svg>
+  ),
+};
+
+export default Ic;
+
+// OS-aware mod key symbol (for keyboard shortcut hints)
+export const IS_MAC =
+  typeof navigator !== 'undefined' &&
+  /mac|iphone|ipad/i.test(navigator.platform || navigator.userAgent || '');
+export const MOD = IS_MAC ? '⌘' : 'Ctrl';

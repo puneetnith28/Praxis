@@ -1,0 +1,247 @@
+import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
+import Ic from './Icons';
+
+interface DownloadFormat {
+  label: string;
+  file: string;
+  size: string;
+  available: boolean;
+  btnLabel?: string;
+}
+
+interface PlatformConfig {
+  platform: string;
+  osName: string;
+  icon: (props: { size?: number }) => JSX.Element;
+  status: 'active' | 'coming_soon';
+  badge: string;
+  formats: DownloadFormat[];
+}
+
+const DOWNLOAD_OPTIONS: PlatformConfig[] = [
+  {
+    platform: 'win',
+    osName: 'Windows',
+    icon: (p) => <Ic.windows size={p.size || 20} />,
+    status: 'active',
+    badge: 'Available Now',
+    formats: [
+      {
+        label: 'Windows Installer (.exe)',
+        file: 'Bedrock-Setup-1.0.0.exe',
+        size: '',
+        available: true,
+        btnLabel: 'Download .exe',
+      },
+      {
+        label: 'Portable Archive (.zip)',
+        file: 'Bedrock-1.0.0-win-x64.zip',
+        size: '',
+        available: true,
+        btnLabel: 'Download .zip',
+      },
+    ],
+  },
+  {
+    platform: 'mac',
+    osName: 'macOS',
+    icon: (p) => <Ic.apple size={p.size || 20} />,
+    status: 'coming_soon',
+    badge: 'Coming Soon',
+    formats: [
+      {
+        label: 'Apple Silicon (M1/M2/M3/M4)',
+        file: 'Bedrock-1.0.0-arm64.dmg',
+        size: 'In development',
+        available: false,
+      },
+      {
+        label: 'Intel x64 (.dmg)',
+        file: 'Bedrock-1.0.0-x64.dmg',
+        size: 'In development',
+        available: false,
+      },
+    ],
+  },
+  {
+    platform: 'linux',
+    osName: 'Linux',
+    icon: (p) => <Ic.linux size={p.size || 20} />,
+    status: 'coming_soon',
+    badge: 'Coming Soon',
+    formats: [
+      {
+        label: 'AppImage (Universal)',
+        file: 'Bedrock-1.0.0.AppImage',
+        size: 'In development',
+        available: false,
+      },
+      {
+        label: 'Debian / Ubuntu (.deb)',
+        file: 'bedrock_1.0.0_amd64.deb',
+        size: 'In development',
+        available: false,
+      },
+    ],
+  },
+];
+
+interface DownloadModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export default function DownloadModal({ isOpen, onClose }: DownloadModalProps) {
+  /**
+   * What the server actually has on disk.
+   *
+   * The table above is the shape of the offer {D} which platforms exist, in what
+   * formats. The filenames and sizes come from the server, because they change
+   * every time a build is cut and a hardcoded one goes stale silently: the row
+   * still says "Download", the link still looks like a link, and the person who
+   * clicks it gets a 404 or, worse, a redirect to a release that was never
+   * published.
+   *
+   * Until this resolves, a row shows its label without a size rather than a
+   * number invented at author time.
+   */
+  const [onDisk, setOnDisk] = useState<Record<string, number> | null>(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    let cancelled = false;
+    fetch('/downloads')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (cancelled || !data?.files) return;
+        const map: Record<string, number> = {};
+        for (const f of data.files) map[f.name] = f.size;
+        setOnDisk(map);
+      })
+      .catch(() => { /* offline, or serving the SPA without the server */ });
+    return () => { cancelled = true; };
+  }, [isOpen]);
+
+  const humanSize = (bytes: number) =>
+    bytes >= 1073741824
+      ? (bytes / 1073741824).toFixed(1) + ' GB'
+      : Math.round(bytes / 1048576) + ' MB';
+
+  /** A format is offered only if the file is really there. */
+  const resolve = (fmt: DownloadFormat): DownloadFormat => {
+    if (!fmt.available) return fmt;
+    if (!onDisk) return { ...fmt, size: fmt.size || 'checking...' };
+    const legacyFile = fmt.file.replace(/^Bedrock/i, 'Conduit');
+    const bytes = onDisk[fmt.file] ?? onDisk[legacyFile];
+    if (bytes === undefined) {
+      return { ...fmt, available: false, size: 'Not built yet' };
+    }
+    const resolvedFile = onDisk[fmt.file] !== undefined ? fmt.file : legacyFile;
+    return { ...fmt, file: resolvedFile, size: humanSize(bytes) };
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [isOpen]);
+
+  if (!isOpen) return null;
+
+  const handleDownload = (filename: string) => {
+    const link = document.createElement('a');
+    link.href = `/downloads/${encodeURIComponent(filename)}`;
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const modalContent = (
+    <div className="download-modal-overlay" onClick={onClose}>
+      <div className="download-modal-container" data-tour="download-modal" onClick={(e) => e.stopPropagation()}>
+        <button className="download-modal-close" onClick={onClose} aria-label="Close modal">
+          <Ic.x size={16} />
+        </button>
+
+        <div className="download-section-header">
+          <span className="step-num">GET BEDROCK</span>
+          <h2 className="section-title">
+            Run your multi-agent studio <span className="highlight-pill">locally</span>
+          </h2>
+          <p className="section-subtitle">
+            Full native performance with real pseudo-terminals, local JSON persistence, and Supervisor approval gates.
+          </p>
+
+          <div className="primary-detected-download">
+            <button
+              className="primary-download-btn"
+              onClick={() => handleDownload(onDisk?.['Bedrock.exe'] ? 'Bedrock.exe' : (onDisk?.['Conduit.exe'] ? 'Conduit.exe' : (onDisk?.['Bedrock-Setup-1.0.0.exe'] ? 'Bedrock-Setup-1.0.0.exe' : 'Conduit-Setup-1.0.0.exe')))}
+              title="Download Bedrock for Windows"
+            >
+              <Ic.download size={18} />
+              <span>Download for Windows</span>
+            </button>
+          </div>
+        </div>
+
+        <div className="download-matrix-grid">
+          {DOWNLOAD_OPTIONS.map((opt) => (
+            <div
+              key={opt.platform}
+              className={`download-platform-card ${opt.status === 'active' ? 'platform-active' : 'platform-pending'}`}
+            >
+              <div className="platform-card-header">
+                <span className="platform-icon">{opt.icon({ size: 20 })}</span>
+                <h3 className="platform-name">{opt.osName}</h3>
+                <span className={`platform-status-badge ${opt.status}`}>{opt.badge}</span>
+              </div>
+              <div className="platform-formats-list">
+                {opt.formats.map(resolve).map((fmt) => (
+                  <div
+                    key={fmt.file}
+                    className={`download-format-row ${fmt.available ? 'available' : 'unavailable'}`}
+                  >
+                    <div className="format-info">
+                      <span className="format-label">{fmt.label}</span>
+                      <span className="format-size">{fmt.size}</span>
+                    </div>
+                    {fmt.available ? (
+                      <button
+                        className="format-download-btn active"
+                        onClick={() => handleDownload(fmt.file)}
+                        title={`Download ${fmt.file}`}
+                      >
+                        {fmt.btnLabel || 'Download'}
+                      </button>
+                    ) : (
+                      <span className="format-coming-soon-tag">Coming Soon</span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="download-footer-note">
+          <span>SHA-256 verified · Packaged with Electron &amp; Node-PTY · Open Source · MIT License</span>
+        </div>
+      </div>
+    </div>
+  );
+
+  return createPortal(modalContent, document.body);
+}
