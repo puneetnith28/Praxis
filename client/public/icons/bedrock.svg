@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="24" height="24">
+  <defs>
+    <linearGradient id="bedrock-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00A4A6" />
+      <stop offset="50%" stop-color="#3B82F6" />
+      <stop offset="100%" stop-color="#7C3AED" />
+    </linearGradient>
+  </defs>
+  <path fill="url(#bedrock-grad)" d="M32 4L6 19v26l26 15 26-15V19L32 4zm0 6.5l20 11.5v20L32 53.5 12 42V22L32 10.5z" />
+  <path fill="#00A4A6" d="M32 17l14 8v14l-14 8-14-8V25l14-8z" opacity="0.85"/>
+  <circle cx="32" cy="32" r="6" fill="#ffffff"/>
+</svg>
