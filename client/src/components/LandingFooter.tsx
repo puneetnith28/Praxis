@@ -37,7 +37,7 @@ export default function LandingFooter({ onOpenConsole, onOpenDownload }: Landing
             Console
           </button>
           <a
-            href="https://github.com/devprashant19/Conduit"
+            href="https://github.com/puneetnith28/Praxis"
             target="_blank"
             rel="noopener noreferrer"
             className="footer-link"
@@ -45,7 +45,7 @@ export default function LandingFooter({ onOpenConsole, onOpenDownload }: Landing
             GitHub
           </a>
           <a
-            href="https://github.com/devprashant19/Conduit#architecture"
+            href="https://github.com/puneetnith28/Praxis#architecture"
             target="_blank"
             rel="noopener noreferrer"
             className="footer-link"
