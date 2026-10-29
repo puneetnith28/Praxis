@@ -1,0 +1,190 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>Bedrock architecture</title>
+<style>
+  :root {
+    --bg:    #faf8f5;
+    --card:  #ffffff;
+    --line:  #d9d3c8;
+    --ink:   #0f0f11;
+    --muted: #6b6b75;
+    --web:   #2563eb;
+    --daemon:#c2410c;
+    --aws:   #ff9900;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 15px/1.4 'Segoe UI', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  #sheet { width: 1180px; padding: 38px 44px 34px; }
+
+  h1 { font-size: 25px; margin: 0 0 4px; letter-spacing: -.4px; }
+  .sub { color: var(--muted); font-size: 14.5px; margin: 0 0 26px; }
+
+  .card {
+    background: var(--card); border: 2px solid var(--line);
+    border-radius: 14px; padding: 16px 20px;
+  }
+  .card.web    { border-color: var(--web); }
+  .card.daemon { border-color: var(--daemon); }
+  .card.aws    { border-color: var(--aws); }
+
+  .head { display: flex; align-items: center; gap: 10px; }
+  .head h2 { font-size: 17px; margin: 0; font-weight: 650; }
+  .head .tag {
+    font-size: 12px; color: var(--muted); font-weight: 500;
+    border: 1px solid var(--line); border-radius: 20px; padding: 2px 10px;
+  }
+  .said { color: var(--muted); font-size: 13.5px; margin-top: 5px; }
+
+  .flow { display: flex; flex-direction: column; align-items: center; gap: 0; }
+  .full { width: 100%; }
+
+  .down {
+    display: flex; flex-direction: column; align-items: center;
+    color: var(--muted); font-size: 12.5px; padding: 9px 0 7px; gap: 1px;
+  }
+  .down .g { font-size: 21px; line-height: .8; color: #b0a89a; }
+
+  /* icon rows */
+  .icons { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+  .pill {
+    display: flex; align-items: center; gap: 8px;
+    border: 1.5px solid var(--line); border-radius: 10px;
+    padding: 8px 12px; background: #fdfcfa; min-width: 132px;
+  }
+  .pill img { width: 20px; height: 20px; object-fit: contain; }
+  .pill b { font-size: 13.5px; font-weight: 600; display: block; }
+  .pill span { font-size: 11px; color: var(--muted); }
+
+  .two { display: flex; gap: 16px; align-items: stretch; }
+  .two > * { flex: 1; }
+
+  .tabs { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 12px; }
+  .tab {
+    border: 1.5px solid var(--line); border-radius: 8px;
+    padding: 6px 11px; font-size: 13px; background: #fdfcfa;
+  }
+
+  .steps { margin-top: 12px; display: flex; flex-direction: column; gap: 9px; }
+  .step { display: flex; gap: 10px; align-items: flex-start; font-size: 13.5px; }
+  .num {
+    flex: none; width: 21px; height: 21px; border-radius: 50%;
+    background: var(--ink); color: #fff; font-size: 12px; font-weight: 700;
+    display: grid; place-items: center; margin-top: 1px;
+  }
+  .step em { font-style: normal; color: var(--muted); }
+
+  .foot {
+    margin-top: 22px; display: flex; gap: 26px; font-size: 12.5px; color: var(--muted);
+    border-top: 1px solid var(--line); padding-top: 14px;
+  }
+  .sw { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: middle; }
+  code { font-family: 'Cascadia Mono', Consolas, monospace; font-size: 12.5px; }
+</style>
+
+<div id="sheet">
+  <h1>Bedrock</h1>
+  <p class="sub">The Open-Source Foundation for Autonomous Agent Orchestration</p>
+
+  <div class="flow">
+
+    <!-- 1. human -->
+    <div class="card full">
+      <div class="head">
+        <h2>You</h2>
+        <span class="tag">browser &middot; or desktop app</span>
+      </div>
+      <div class="tabs">
+        <div class="tab">Terminals</div>
+        <div class="tab">Group Chat</div>
+        <div class="tab">MCP Messages</div>
+        <div class="tab">Shared</div>
+        <div class="tab">Wiki</div>
+        <div class="tab">Activity</div>
+        <div class="tab">Usage</div>
+        <div class="tab">&#127908; Voice</div>
+      </div>
+    </div>
+
+    <div class="down"><span class="g">&darr;</span><span>REST + WebSocket</span></div>
+
+    <!-- 2. web server -->
+    <div class="card web full">
+      <div class="head">
+        <h2>Web server</h2>
+        <span class="tag">:3200</span>
+      </div>
+      <div class="said">Serves the UI. Relays every command. <b>Owns no agents</b> &mdash; restart it and they keep running.</div>
+    </div>
+
+    <div class="down"><span class="g">&darr;</span><span>local socket</span></div>
+
+    <!-- 3. daemon -->
+    <div class="card daemon full">
+      <div class="head">
+        <h2>Daemon</h2>
+        <span class="tag">:3210</span>
+      </div>
+      <div class="said">Owns every agent process, and watches everything they print.</div>
+
+      <div class="icons">
+        <div class="pill"><img src="../client/public/icons/claude.svg" alt="" /><span><b>Claude Code</b><span>terminal</span></span></div>
+        <div class="pill"><img src="../client/public/icons/openai.svg" alt="" /><span><b>Codex</b><span>app-server</span></span></div>
+        <div class="pill"><img src="../client/public/icons/gemini.svg" alt="" /><span><b>Gemini</b><span>terminal</span></span></div>
+        <div class="pill"><img src="../client/public/icons/opencode.svg" alt="" /><span><b>OpenCode</b><span>terminal</span></span></div>
+        <div class="pill"><img src="../client/public/icons/localharness.svg" alt="" /><span><b>LocalHarness</b><span>Ollama &middot; ACP</span></span></div>
+        <div class="pill"><img src="../client/public/icons/groq.svg" alt="" /><span><b>GPT-OSS</b><span>Groq &middot; aider</span></span></div>
+        <div class="pill"><img src="../client/public/icons/nvidia.svg" alt="" /><span><b>Nemotron</b><span>OpenRouter &middot; aider</span></span></div>
+      </div>
+    </div>
+
+    <div class="down"><span class="g">&darr;</span><span>every line they print</span></div>
+
+    <!-- 4. safety + supervisor -->
+    <div class="two full">
+      <div class="card">
+        <div class="head">
+          <h2>&#128274; Read twice</h2>
+        </div>
+        <div class="steps">
+          <div class="step"><span class="num">1</span>
+            <span><b>Patterns</b> &mdash; 23 regexes, instant, no model call.<br><em>Catches <code>rm -rf</code>, <code>DROP TABLE</code>, y/N prompts.</em></span>
+          </div>
+          <div class="step"><span class="num">2</span>
+            <span><b>Supervisor</b> &mdash; decides what is worth your attention.<br><em>Progress, question, blocker, risky &mdash; or noise, which is dropped.</em></span>
+          </div>
+        </div>
+        <div class="said" style="margin-top:12px">
+          Anything risky <b>freezes the agent</b> until you answer.
+          The Supervisor can propose, never act.
+        </div>
+      </div>
+
+      <div class="card aws">
+        <div class="head">
+          <img src="../client/public/icons/strands.svg" alt="" style="width:22px;height:22px" />
+          <h2>AWS Strands Agents</h2>
+        </div>
+        <div class="said">The Supervisor is a Strands agent, with tools.</div>
+        <div class="icons">
+          <div class="pill"><img src="../client/public/icons/bedrock.svg" alt="" /><span><b>Bedrock</b><span>first choice</span></span></div>
+          <div class="pill"><img src="../client/public/icons/claude.svg" alt="" /><span><b>Anthropic</b><span>fallback</span></span></div>
+        </div>
+        <div class="said" style="margin-top:12px">
+          Same SDK either way, so losing a provider costs a provider &mdash; not the framework.
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="foot">
+    <span><span class="sw" style="background:var(--web)"></span>Relays only</span>
+    <span><span class="sw" style="background:var(--daemon)"></span>Owns the agents</span>
+    <span><span class="sw" style="background:var(--aws)"></span>AWS</span>
+    <span style="margin-left:auto">State on disk as JSON in <code>~/.conduit</code> &mdash; no database</span>
+  </div>
+</div>
